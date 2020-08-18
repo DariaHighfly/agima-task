@@ -1,0 +1,122 @@
+@font-face {
+    font-family: 'Proxima Nova';
+    src: url('ProximaNovaRegular.eot');
+}
+
+h1 {
+    font-family: 'Proxima Nova', sans-serif;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/******* MAIN *******/
+
+.chat {
+    background: url("background.png") no-repeat left -1147px bottom -100px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100vh;
+}
+.chat-box {
+    max-height: 72vh;
+    overflow: scroll;
+}
+.msg {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0 20px 20px 20px;
+}
+.msg:first-child {
+    padding-top: 41px;
+}
+.msg:last-child {
+    padding-bottom: 30px;
+}
+.msg_left {
+    justify-content: flex-start;
+}
+.msg_right {
+    justify-content: flex-end;
+}
+.msg__avatar {
+    height: 30px;
+    width: auto;
+    margin: 0 1px 0 1px;
+}
+.msg__text {
+    background: #F1F3F5;
+    border-radius: 5px;
+    padding: 15px 15px 15px 15px;
+    max-width: 78%;
+}
+.msg__balloon_right {
+    position: relative;
+    left: -10px;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #F1F3F5;
+}
+.msg__balloon_left {
+    position: relative;
+    left: 10px;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #F1F3F5;
+}
+.chat_separate-line {
+    height: 1px;
+    width: 100%;
+    background-color: #DBDBDB;
+    /*margin-top: 29px;*/
+}
+.chat-timeline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.chat-timeline_time {
+    padding: 0;
+    /*margin: 20px 27.8px 16px 15px;*/
+    margin: 0 27.8px 0 15px;
+}
+.chat__textarea {
+    font-family: 'Noto Sans', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 19px;
+    margin: 20px 40px 0 20px;
+    padding: 10px;
+    border: 1px solid #DBDBDB;
+    box-sizing: border-box;
+    border-radius: 4px;
+    resize: none;
+    outline: none;
+    width: 90vw;
+    height: 16vh;
+}
+.chat__button_send {
+    font-family: 'Proxima Nova', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    background-color: #0F54B9;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #FFFFFF;
+    margin: 20px 20px 30px 20px;
+    padding: 10px 28px 10px 28px;
+    border: none;
+    border-radius: 21px;
+    outline: none;
+}
