@@ -16,7 +16,7 @@
               <tr class="timetable__list"
                   v-for="item in scheduleList[currentDay]" :key="item.id">
                 <td>
-                  <textarea v-model="item.time" class="timetable__list_time"></textarea>
+                  <textarea v-model="item.time" :class="{'passed' : stateOfActivity(item.time, currentDay)}" class="timetable__list_time"></textarea>
                 </td>
                 <td>
                   <textarea v-model="item.event" class="timetable__list_name"></textarea>
@@ -55,7 +55,7 @@
           <li v-for="day in daysOfWeek"
               :key="day.key"
               class="week-day__list_item"
-              :class="{'selected-day ' : day.key === currentDay}"
+              :class="{'selected-day' : day.key === currentDay}"
               v-on:click="changeDay(day.key)">{{day.weekDay}}</li>
         </ul>
       </div>
@@ -64,6 +64,9 @@
 </template>
 
 <script>
+  import {
+    isAfter
+  } from "date-fns";
 export default {
   name: 'App',
   data() {
@@ -106,32 +109,43 @@ export default {
                 {
                   id: 0,
                   time: "10:00",
-                  event: "Обед"
+                  event: "Завтрак"
                 },
                 {
                   id: 1,
-                  time: "11:00",
+                  time: "13:00",
                   event: "Обед"
                 },
                 {
                   id: 2,
-                  time: "12:00",
-                  event: "Обед"
-                },
-                {
-                  id: 3,
-                  time: "13:00",
-                  event: "Обед"
+                  time: "19:00",
+                  event: "Ужин"
                 },
               ],
               [
                 {
                   id: 0,
                   time: "10:00",
-                  event: "Обед"
+                  event: "Встреча"
                 },
               ],
-              [],
+              [
+                {
+                  id: 0,
+                  time: "10:00",
+                  event: "Завтрак"
+                },
+                {
+                  id: 1,
+                  time: "13:00",
+                  event: "Обед"
+                },
+                {
+                  id: 2,
+                  time: "19:00",
+                  event: "Ужин"
+                },
+              ],
               [],
               [
                 {
@@ -141,7 +155,7 @@ export default {
                 },
                 {
                   id: 1,
-                  time: "19:00",
+                  time: "22:00",
                   event: "Сдать тестовое задание, чтобы попасть на стажировку"
                 }
               ],
@@ -152,7 +166,23 @@ export default {
                   event: "Ужин"
                 },
               ],
-              []
+              [
+                {
+                  id: 0,
+                  time: "10:00",
+                  event: "Завтрак"
+                },
+                {
+                  id: 1,
+                  time: "13:00",
+                  event: "Обед"
+                },
+                {
+                  id: 2,
+                  time: "19:00",
+                  event: "Ужин"
+                },
+              ]
       ]
     }
   },
@@ -177,9 +207,9 @@ export default {
                   event: this.newEvent
                 }
         );
+        localStorage["scheduleList"] = JSON.stringify(this.scheduleList);
       }
       this.scheduleList[this.currentDay].sort((a,b) => a.time.localeCompare(b.time));
-      console.log(this.scheduleList[this.currentDay]);
       this.newTime = "";
       this.newEvent = "";
     },
@@ -189,12 +219,28 @@ export default {
     },
     changeDay(key) {
       this.currentDay = key;
-    }
+    },
+    stateOfActivity(eventTime, weekDay) {
+      let now = new Date();
+      let nowWeekDay = ((new Date()).getDay() === 0) ? 6 : (new Date()).getDay() - 1;
+
+      if (weekDay < nowWeekDay) {
+        return true;
+      } else if (weekDay > nowWeekDay) {
+        return false;
+      } else {
+        let time = new Date();
+        time.setHours(eventTime.split(":")[0], eventTime.split(":")[1], 0);
+        let isPast = isAfter(now, time);
+        return !!isPast;
+      }
+    },
   },
   mounted() {
-    if (localStorage.newTime) {
-      this.newTime = localStorage.newTime;
+    if (localStorage["scheduleList"]) {
+      this.scheduleList = JSON.parse(localStorage["scheduleList"]);
     }
+    this.scheduleList[this.currentDay].sort((a,b) => a.time.localeCompare(b.time));
   },
 }
 </script>
@@ -253,6 +299,8 @@ export default {
     display: flex;
     justify-content: flex-end;
     padding: 30px 30px 0 50px;
+    max-height: 40vh;
+    overflow-y: scroll;
   }
   table {
     table-layout: auto;
@@ -280,6 +328,9 @@ export default {
     font-size: 16px;
     font-weight: bold;
     color: #01ac6a;
+  }
+  .passed {
+    color: #af292c;
   }
   .timetable__list_name {
     width: 160px;
