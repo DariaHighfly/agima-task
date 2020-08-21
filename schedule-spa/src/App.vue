@@ -14,8 +14,12 @@
             </tr>
             <tr class="timetable__list"
                 v-for="item in scheduleList[currentDay]" :key="item.id">
-              <td class="timetable__list_time">{{item.time}}</td>
-              <td class="timetable__list_name">{{item.event}}</td>
+              <td>
+                <textarea v-model="item.time" class="timetable__list_time"></textarea>
+              </td>
+              <td>
+                <textarea v-model="item.event" class="timetable__list_name"></textarea>
+              </td>
               <td>
                 <img class="timetable__list_delete"
                      src="./assets/agima.jpeg"
@@ -63,31 +67,31 @@ export default {
       daysOfWeek: [
         {
           key: 0,
-          weekDay: "пн"
+          weekDay: "Пн"
         },
         {
           key: 1,
-          weekDay: "вт"
+          weekDay: "Вт"
         },
         {
           key: 2,
-          weekDay: "ср"
+          weekDay: "Ср"
         },
         {
           key: 3,
-          weekDay: "чт"
+          weekDay: "Чт"
         },
         {
           key: 4,
-          weekDay: "пт"
+          weekDay: "Пт"
         },
         {
           key: 5,
-          weekDay: "сб"
+          weekDay: "Сб"
         },
         {
           key: 6,
-          weekDay: "вс"
+          weekDay: "Вс"
         }
       ],
       scheduleList: [
@@ -131,7 +135,7 @@ export default {
                 {
                   id: 1,
                   time: "19:00",
-                  event: "Сдать тестовое задание"
+                  event: "Сдать тестовое задание, чтобы попасть на стажировку"
                 }
               ],
               [
@@ -167,16 +171,26 @@ export default {
     changeDay(key) {
       this.currentDay = key;
     }
-  }
+  },
+  mounted() {
+    if (localStorage.newTime) {
+      this.newTime = localStorage.newTime;
+    }
+  },
 }
 </script>
 
 <style>
+  @font-face {
+    font-family: "Gilroy";
+    src: url('assets/Gilroy-Regular.eot');
+  }
   body {
     padding: 0;
     margin: 0;
   }
   .main {
+    font-family: "Gilroy", sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -222,28 +236,46 @@ export default {
     padding: 30px 10px 0 80px;
   }
   table {
-    table-layout: fixed;
+    table-layout: auto;
     width: 100%;
   }
-  .timetable__title {
-  }
-  .timetable__title_item {
-  }
-  .timetable__title_item:last-child {
-  }
-  .timetable__list, .timetable_add {
-  }
-  .timetable__title_item, .timetable__list_time, .timetable__list_name {
+  table th, table td {
     text-align: left;
+    vertical-align: top;
+  }
+  table th {
+    font-size: 16px;
+    font-weight: normal;
+    padding-bottom: 20px;
+  }
+  .timetable__list_time, .timetable__list_name {
+    outline: none;
+    border: none;
+    resize: none;
+    font-family: "Gilroy", sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+  }
+  .timetable__list_time {
+    width: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #01ac6a;
+  }
+  .timetable__list_name {
+    width: 160px;
+    min-height: 60px;
   }
   .timetable__list_delete, .timetable__list_add {
     width: 20px;
     height: 20px;
-    margin-left: 20px;
+    margin-left: 40px;
     padding: 0;
   }
   .timetable__list_add {
-    margin: 30px 0 0 20px;
+    width: 20px;
+    height: 20px;
+    margin: 30px 0 0 40px;
   }
   .timetable__input_time, .timetable__input_name {
     border: 2px solid #f0f2f2;
@@ -257,7 +289,7 @@ export default {
     height: 30px;
   }
   .timetable__input_name {
-    width: 90px;
+    width: 160px;
     height: 30px;
   }
   .week-day {
@@ -271,7 +303,7 @@ export default {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
   }
   .week-day__list_item {
     padding: 10px 30px 10px 30px;
