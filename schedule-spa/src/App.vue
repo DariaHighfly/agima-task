@@ -3,7 +3,7 @@
     <div class="schedule">
       <div class="time">
         <div class="transfer">
-          <img class="transfer__img" src="./assets/agima.jpeg" alt="drag-image"/>
+          <img class="transfer__img" src="./assets/star.png" alt="drag-image"/>
         </div>
         <div class="timetable">
           <table class="timetable__table">
@@ -12,28 +12,36 @@
               <th class="timetable__title_item">Событие</th>
               <th></th>
             </tr>
-            <tr class="timetable__list"
-                v-for="item in scheduleList[currentDay]" :key="item.id">
-              <td>
-                <textarea v-model="item.time" class="timetable__list_time"></textarea>
-              </td>
-              <td>
-                <textarea v-model="item.event" class="timetable__list_name"></textarea>
-              </td>
-              <td>
-                <img class="timetable__list_delete"
-                     src="./assets/agima.jpeg"
-                     alt="delete-image"
-                     v-on:click="deleteEvent(item.id)"
-                />
-              </td>
-            </tr>
+            <tbody name="addToList" is="transition-group">
+              <tr class="timetable__list"
+                  v-for="item in scheduleList[currentDay]" :key="item.id">
+                <td>
+                  <textarea v-model="item.time" class="timetable__list_time"></textarea>
+                </td>
+                <td>
+                  <textarea v-model="item.event" class="timetable__list_name"></textarea>
+                </td>
+                <td>
+                  <img class="timetable__list_delete"
+                       src="./assets/delete.png"
+                       alt="delete-image"
+                       v-on:click="deleteEvent(item.id)"
+                  />
+                </td>
+              </tr>
+            </tbody>
             <tr class="timetable_add">
-              <td><input v-model="newTime" class="timetable__input_time"></td>
-              <td><input v-model="newEvent" class="timetable__input_name"></td>
+              <td><input v-model="newTime"
+                         class="timetable__input_time"
+                         v-on:keyup.enter="addEvent">
+              </td>
+              <td><input v-model="newEvent"
+                         class="timetable__input_name"
+                         v-on:keyup.enter="addEvent">
+              </td>
               <td>
                 <img class="timetable__list_add"
-                     src="./assets/agima.jpeg"
+                     src="./assets/plus.png"
                      alt="delete-image"
                      v-on:click="addEvent"
                 />
@@ -63,7 +71,6 @@ export default {
       currentDay: ((new Date()).getDay() === 0) ? 6 : (new Date()).getDay() - 1,
       newTime: "",
       newEvent: "",
-      maxId: [4, 1, 0, 0, 0, 1, 0],
       daysOfWeek: [
         {
           key: 0,
@@ -149,10 +156,20 @@ export default {
       ]
     }
   },
+  computed: {
+    maxId: function () {
+      return [this.scheduleList[0].length,
+        this.scheduleList[1].length,
+        this.scheduleList[2].length,
+        this.scheduleList[3].length,
+        this.scheduleList[4].length,
+        this.scheduleList[5].length,
+        this.scheduleList[6].length];
+    }
+  },
   methods: {
     addEvent() {
       if (this.newTime !== "" && this.newEvent !== "") {
-        this.maxId[this.currentDay] += 1;
         this.scheduleList[this.currentDay].push(
                 {
                   id: this.maxId[this.currentDay],
@@ -161,6 +178,8 @@ export default {
                 }
         );
       }
+      this.scheduleList[this.currentDay].sort((a,b) => a.time.localeCompare(b.time));
+      console.log(this.scheduleList[this.currentDay]);
       this.newTime = "";
       this.newEvent = "";
     },
@@ -233,7 +252,7 @@ export default {
   .timetable {
     display: flex;
     justify-content: flex-end;
-    padding: 30px 10px 0 80px;
+    padding: 30px 30px 0 50px;
   }
   table {
     table-layout: auto;
@@ -267,16 +286,33 @@ export default {
     min-height: 60px;
   }
   .timetable__list_delete, .timetable__list_add {
-    width: 20px;
-    height: 20px;
-    margin-left: 40px;
+    margin-left: 30px;
     padding: 0;
   }
-  .timetable__list_add {
-    width: 20px;
-    height: 20px;
-    margin: 30px 0 0 40px;
+  .timetable__list_delete:hover, .timetable__list_add:hover {
+    cursor: pointer;
   }
+  .timetable__list_delete {
+    width: 15px;
+    height: 15px;
+  }
+  .timetable__list_add {
+    margin: 30px 0 0 20px;
+    width: 30px;
+    height: 30px;
+  }
+
+  /***ANIMATION***/
+
+  .addToList-enter-active {
+    transition: all 0.4s;
+  }
+  .addToList-enter {
+    opacity: 0;
+  }
+
+  /***ANIMATION***/
+
   .timetable__input_time, .timetable__input_name {
     border: 2px solid #f0f2f2;
     border-radius: 4px;
